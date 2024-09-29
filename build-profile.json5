@@ -1,0 +1,52 @@
+{
+  "app": {
+    "signingConfigs": [
+      //      签名证书，克隆项目的时候，先把这部分删除掉，然后再通过DevEco studio 重新生成,运行到真机也要重新签名
+      //      ------------------Start------------------
+      {
+        "name": "default",
+        "type": "HarmonyOS",
+        "material": {
+          "certpath": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.cer",
+          "storePassword": "0000001BCF142F57450A0125F5A6AC23CD2B352159D13368ED57EF524DDAD2EB9A768B2074729AE9D52D98",
+          "keyAlias": "debugKey",
+          "keyPassword": "0000001BF53AA73342BEBACCC84085BEC53C569739AB982D0FE7766A3CA6B68E248C5462FA61784AE47A59",
+          "profile": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.p7b",
+          "signAlg": "SHA256withECDSA",
+          "storeFile": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.p12"
+        }
+      }
+      //      ------------------End------------------
+    ],
+    "products": [
+      {
+        "name": "default",
+        "signingConfig": "default",
+        "compatibleSdkVersion": "5.0.0(12)",
+        "runtimeOS": "HarmonyOS",
+      }
+    ],
+    "buildModeSet": [
+      {
+        "name": "debug",
+      },
+      {
+        "name": "release"
+      }
+    ]
+  },
+  "modules": [
+    {
+      "name": "entry",
+      "srcPath": "./entry",
+      "targets": [
+        {
+          "name": "default",
+          "applyToProducts": [
+            "default"
+          ]
+        }
+      ]
+    }
+  ]
+}

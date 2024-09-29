@@ -1,0 +1,44 @@
+{
+  "string": [
+    {
+      "name": "module_desc",
+      "value": "module description"
+    },
+    {
+      "name": "EntryAbility_desc",
+      "value": "description"
+    },
+    {
+      "name": "EntryAbility_label",
+      "value": "label"
+    },
+    {
+      "name": "permission_reason_calendar",
+      "value": "calendar reason"
+    },
+    {
+      "name": "permission_reason_camera",
+      "value": "user"
+    },
+    {
+      "name": "permission_reason_contact",
+      "value": "user"
+    },
+    {
+      "name": "permission_reason_imageVideo",
+      "value": "user"
+    },
+    {
+      "name": "permission_reason_location",
+      "value": "user"
+    },
+    {
+      "name": "permission_reason_microphone",
+      "value": "user"
+    },
+    {
+      "name": "permission_reason_notification",
+      "value": "user"
+    }
+  ]
+}

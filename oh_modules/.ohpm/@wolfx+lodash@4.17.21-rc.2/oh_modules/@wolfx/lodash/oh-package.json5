@@ -1,0 +1,18 @@
+{
+  "name": "@wolfx/lodash",
+  "version": "4.17.21-rc.2",
+  "description": "lodash for ArkTS. Built-in types, only necessary files are kept to reduce package size.",
+  "keywords": [
+    "underscore",
+    "lodash",
+  ],
+  "homepage": "https://lodash.com/",
+  "icon": "https://lodash.com/icon.svg",
+  "license": "MIT",
+  "main": "src/main/ets/lodash.min.js",
+  "types": "types/index.d.ts",
+  "author": "wolfx",
+  "repository": "https://github.com/lodash/lodash",
+  "dependencies": {},
+  "devDependencies": {}
+}

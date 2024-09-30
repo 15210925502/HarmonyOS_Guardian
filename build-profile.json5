@@ -7,13 +7,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.cer",
-          "storePassword": "0000001BCF142F57450A0125F5A6AC23CD2B352159D13368ED57EF524DDAD2EB9A768B2074729AE9D52D98",
+          "certpath": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.cer",
+          "storePassword": "0000001B7893F004A21E6D6D4A4262647B7A7F7C3E5C49DD26E6BE40D17660F02501D9F91136D4449438B1",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001BF53AA73342BEBACCC84085BEC53C569739AB982D0FE7766A3CA6B68E248C5462FA61784AE47A59",
-          "profile": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.p7b",
+          "keyPassword": "0000001B98865B45D5BCE9F42F95A0EB61FEA89A7540B7819D68679E25D65CE8C8D27C6B1A9733D5264DE7",
+          "profile": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/hld/.ohos/config/default_hm_guardian-template_9HlbHxGSPeaKhlrgO_eR-_ROHE-wRA3aYopAcCOF-3o=.p12"
+          "storeFile": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.p12"
         }
       }
       //      ------------------End------------------

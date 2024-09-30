@@ -113,8 +113,8 @@ class CleanerManager {
     try {
       const phAccessHelper = photoAccessHelper.getPhotoAccessHelper(getContext())
       let fetchResult: photoAccessHelper.FetchResult<photoAccessHelper.PhotoAsset> = await phAccessHelper.getAssets(fetchOptions);
-      let asset: photoAccessHelper.PhotoAsset = await fetchResult.getFirstObject();
-      await photoAccessHelper.MediaAssetChangeRequest.deleteAssets(getContext(), [asset.uri]);
+      let photoAssetList: Array<photoAccessHelper.PhotoAsset>  = await fetchResult.getAllObjects();
+      await photoAccessHelper.MediaAssetChangeRequest.deleteAssets(getContext(), photoAssetList);
       console.info('deleteAssets successfully');
     } catch (err) {
       console.error(`deleteAssetsDemo failed with error: ${err.code}, ${err.message}`);

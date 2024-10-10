@@ -3,6 +3,9 @@ import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { permissionManager } from './PermissionManager'
 import { promptAction } from '@kit.ArkUI'
 import { dataSharePredicates } from '@kit.ArkData'
+import { image } from '@kit.ImageKit'
+import { fileIo } from '@kit.CoreFileKit'
+import { formatByteLength } from '../common/utils'
 
 class CleanerManager {
   // 权限
@@ -94,6 +97,39 @@ class CleanerManager {
     return list.filter(item => item.photoType === photoAccessHelper.PhotoType.VIDEO)
   }
 
+  /**
+   * 获取指定尺寸图片，用于压缩
+   * largeSize:图片尺寸
+   */
+  async getLargeSizeList(largeSize: number) {
+    const photoAssets = await this.getAssets()
+    return photoAssets.filter(item => item.get(photoAccessHelper.PhotoKeys.SIZE) as number >= largeSize)
+  }
+
+  // 压缩图片
+  async compressImage(uri: string) {
+    // 创建图片打包器
+    const imagePacker = image.createImagePacker()
+    // 坑点：createImageSource 不能直接使用uri,需要先基于uri打开文件，再传入文件的 fd
+    const file = fileIo.openSync(uri)
+    // fd 打开文件最后的唯一标识，获取图片源
+    const imageSource = image.createImageSource(file.fd)
+    // 图片打包（图片重新编码）
+    // 参数1：图片源
+    // 参数2： 打包配置：格式、质量 为必传参数
+    const arrayBuffer = await imagePacker.packing(imageSource, { format: 'image/jpeg', quality: 20 })
+    // AlertDialog.show({ message: '压缩后文件流大小为：' + formatByteLength(arrayBuffer.byteLength) })
+
+    // 把数据流写入图库中
+    const phAccessHelper = photoAccessHelper.getPhotoAccessHelper(getContext())
+    // 创建图片资产，意味可以往里写东西
+    const createAssetUri = await phAccessHelper.createAsset(photoAccessHelper.PhotoType.IMAGE, 'jpg')
+    // 数据写入文件前，需要先打开文件 并设置读写
+    const createAssetFile = fileIo.openSync(createAssetUri, fileIo.OpenMode.READ_WRITE)
+    fileIo.writeSync(createAssetFile.fd, arrayBuffer)
+    fileIo.close(createAssetFile.fd)
+  }
+
   // 删除图片
   async deletePhotos(urls: string[]) {
     // 获取所有图片
@@ -112,8 +148,9 @@ class CleanerManager {
     };
     try {
       const phAccessHelper = photoAccessHelper.getPhotoAccessHelper(getContext())
-      let fetchResult: photoAccessHelper.FetchResult<photoAccessHelper.PhotoAsset> = await phAccessHelper.getAssets(fetchOptions);
-      let photoAssetList: Array<photoAccessHelper.PhotoAsset>  = await fetchResult.getAllObjects();
+      let fetchResult: photoAccessHelper.FetchResult<photoAccessHelper.PhotoAsset> =
+        await phAccessHelper.getAssets(fetchOptions);
+      let photoAssetList: Array<photoAccessHelper.PhotoAsset> = await fetchResult.getAllObjects();
       await photoAccessHelper.MediaAssetChangeRequest.deleteAssets(getContext(), photoAssetList);
       console.info('deleteAssets successfully');
     } catch (err) {

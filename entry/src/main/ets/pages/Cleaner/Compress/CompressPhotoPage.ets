@@ -1,7 +1,8 @@
 import { photoAccessHelper } from '@kit.MediaLibraryKit'
 import { NavigationTitleBuilder } from '../../../common/builders'
-import { formatByteLength } from '../../../common/utils'
-import { themeManager } from '../../../manager'
+import { formatByteLength, KILO_BYTE, MEGA_BYTE } from '../../../common/utils'
+import { cleanerManager, themeManager } from '../../../manager'
+import { promptAction } from '@kit.ArkUI'
 
 @Entry
 @Component
@@ -16,6 +17,21 @@ struct CompressPhotoIndexPage {
 
   onPageHide() {
     themeManager.settingStatusBarBlack()
+  }
+
+  aboutToAppear(): void {
+    this.getList()
+  }
+
+  async getList() {
+    this.list = await cleanerManager.getLargeSizeList(2 * MEGA_BYTE)
+  }
+
+  startCompress (){
+    this.selectedUris.forEach(item => {
+    cleanerManager.compressImage(item)
+    })
+    promptAction.showToast({message:this.selectedUris.length + "张图片压缩成功！"})
   }
 
   // TODO：立即瘦身（压缩照片）
@@ -114,6 +130,7 @@ struct CompressPhotoIndexPage {
             .enabled(this.selectedUris.length > 0)
             .onClick(() => {
               // TODO：立即瘦身（压缩照片）
+              this.startCompress()
             })
         }
         .width('100%')

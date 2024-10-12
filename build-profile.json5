@@ -7,13 +7,13 @@
         "name": "default",
         "type": "HarmonyOS",
         "material": {
-          "certpath": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.cer",
-          "storePassword": "0000001B7893F004A21E6D6D4A4262647B7A7F7C3E5C49DD26E6BE40D17660F02501D9F91136D4449438B1",
+          "certpath": "/Users/hld/.ohos/config/default_HarmonyOS_Guardian_Lq2CXoI_rhSSOEhUrL_qoo_xXtpRhcMtSq0YMI75zmU=.cer",
+          "storePassword": "0000001B2ED10D36C2BDB93FBE60B62B43621255CC0CA2AC5D7A7635D701F1915836F8F320B3A1035C7C81",
           "keyAlias": "debugKey",
-          "keyPassword": "0000001B98865B45D5BCE9F42F95A0EB61FEA89A7540B7819D68679E25D65CE8C8D27C6B1A9733D5264DE7",
-          "profile": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.p7b",
+          "keyPassword": "0000001BD6BEF127A6E198D2B4ACEFA39C04EBDEDA614D98F3EEFD8C1031DEFC65310366646AB0F56E3946",
+          "profile": "/Users/hld/.ohos/config/default_HarmonyOS_Guardian_Lq2CXoI_rhSSOEhUrL_qoo_xXtpRhcMtSq0YMI75zmU=.p7b",
           "signAlg": "SHA256withECDSA",
-          "storeFile": "/Users/hualingdong/.ohos/config/default_HarmonyOS_Guardian_Yu-poHD3Idpa0UaqL1EY_qSOEawffTJYA-nEUSNcuaA=.p12"
+          "storeFile": "/Users/hld/.ohos/config/default_HarmonyOS_Guardian_Lq2CXoI_rhSSOEhUrL_qoo_xXtpRhcMtSq0YMI75zmU=.p12"
         }
       }
       //      ------------------End------------------

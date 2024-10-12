@@ -1,6 +1,10 @@
 {
   "module": {
     "requestPermissions": [
+//      认证能力
+      {
+        "name": "ohos.permission.ACCESS_BIOMETRIC"
+      },
       //      权限等级：normal   对所有用户开放
       //      授权方式：system_grant  系统静默授权，无弹窗
       {
@@ -60,14 +64,14 @@
         //        应用场景  API 11 必填
         "usedScene": {}
       },
-//      受限开放权限，需要签名证书，开发阶段可通过DevEco studio 快速生成签名证书，项目上线需要到应用市场（AGC)生成证书
+      //      受限开放权限，需要签名证书，开发阶段可通过DevEco studio 快速生成签名证书，项目上线需要到应用市场（AGC)生成证书
 
-//      ⚠️⚠️⚠️证书生成方式:
-//      1.点击右上角的  项目结构
-//      2.点击project的 signig configs
-//      3.选中support HarmonyOS 和 Automatically generate signature 点击ok
+      //      ⚠️⚠️⚠️证书生成方式:
+      //      1.点击右上角的  项目结构
+      //      2.点击project的 signig configs
+      //      3.选中support HarmonyOS 和 Automatically generate signature 点击ok
 
-//      通讯录
+      //      通讯录
       {
         "name": "ohos.permission.READ_CONTACTS",
         //        申请权限的原因 API 11 必填
@@ -82,7 +86,7 @@
         //        应用场景  API 11 必填
         "usedScene": {}
       },
-//      照片
+      //      照片
       {
         "name": "ohos.permission.READ_IMAGEVIDEO",
         //        申请权限的原因 API 11 必填

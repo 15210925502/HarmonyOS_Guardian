@@ -1,5 +1,7 @@
 import { router } from '@kit.ArkUI'
 import { PRIVACY_SETTINGS, PrivacySettings } from '../../../common/constants'
+import { encryptMD5 } from '../../../common/utils/encryptMD5'
+import { userAuthManager } from '../../../manager/UserAuthManager'
 
 @Entry
 @Component
@@ -19,14 +21,60 @@ struct AuthPatternLockPage {
   // 图形密码控制器
   private patternLockController: PatternLockController = new PatternLockController()
 
+  setErrorMessage(message: string) {
+    this.errorMessage = message
+    this.patternLockController.setChallengeResult(PatternLockChallengeResult.WRONG)
+  }
+
+  clearErrorMessage() {
+    this.errorMessage = ''
+    this.patternLockController.setChallengeResult(PatternLockChallengeResult.CORRECT)
+  }
+
+  onPatternComplete(input: number[]) {
+    // 更新线条颜色，临时使用
+    this.inputPasswords = input
+    if (input.length < 4) {
+      this.setErrorMessage('密码小于4位，请重新输入')
+    } else {
+      this.clearErrorMessage()
+      if (this.privacySettings.patternPassword === encryptMD5(input.toString())) {
+        router.pushUrl({ url: '/pages/Privacy/PrivacyIndexPage'.slice(1) })
+      } else {
+        this.setErrorMessage('密码不正确，请重新输入')
+      }
+    }
+    // 输入完成后，清空界面
+    this.timeoutID = setTimeout(() => {
+      this.patternLockController.reset()
+      this.inputPasswords = []
+    }, 500)
+  }
+
+  aboutToAppear(): void {
+    // 模拟器不支持，所有返回都是false
+    this.startUserAuth()
+  }
+
+  // 生物识别认证
+  startUserAuth() {
+    // 判断是否有认证权限
+    if (userAuthManager.checkUserAuthSupport()) {
+      // 有的话，开始认证
+      userAuthManager.startUserAuth()
+      // 认证成功，跳转到主页
+      router.pushUrl({ url: 'pages/Privacy/PrivacyIndexPage' })
+    }
+  }
+
   build() {
     Column() {
       // 标题
       Navigation() {
-        // Column() {
-        //   Text('patternPassword：' + this.privacySettings.patternPassword)
-        //   Text('passwords：' + encryptMD5(this.inputPasswords.toString()))
-        // }
+        Column() {
+          Text('patternPassword：' + this.privacySettings.patternPassword)
+          Text('passwords：' + this.inputPasswords.toString())
+        }
 
         Column({ space: 20 }) {
           Column({ space: 10 }) {
@@ -59,7 +107,8 @@ struct AuthPatternLockPage {
               clearTimeout(this.timeoutID)
             })
             .onPatternComplete((input: number[]) => {
-              // TODO：密码输入结束时触发该回调
+              // 密码输入结束时触发该回调
+              this.onPatternComplete(input)
             })
 
           Row({ space: 20 }) {

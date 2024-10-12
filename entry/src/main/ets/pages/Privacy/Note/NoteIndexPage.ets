@@ -1,20 +1,32 @@
 import { router } from '@kit.ArkUI'
 import dayjs from 'dayjs'
 import { EmptyTipsComp } from '../../../common/components'
-
-// 隐私笔记
-interface NoteItem {
-  id: number | null
-  title: string
-  content: string
-  date_added: number
-}
+import { privacyNoteDB } from '../../../dataBase/PrivacyNoteDB'
+import { PrivacyNoteDBInfo } from './PrivacyNoteItem'
 
 @Entry
 @Component
 struct NoteIndexPage {
   // 笔记列表
-  @State list: NoteItem[] = []
+  @State list: PrivacyNoteDBInfo[] = []
+
+  // 此方法，只有初始化的时候才调用一次，以后就不调用啦
+  aboutToAppear(): void {
+  }
+
+  // 此方法，每次页面将要显示时，都调用，aboutToAppear方法，只有初始化的时候才调用一次，以后就不调用啦
+  onPageShow(): void {
+    this.getList()
+  }
+
+  async getList() {
+    this.list = await privacyNoteDB.select()
+  }
+
+  async deleteData(id:number){
+    await privacyNoteDB.delete(id)
+    this.getList()
+  }
 
   @Builder
   swipeActionEnd(id: number) {
@@ -25,7 +37,8 @@ struct NoteIndexPage {
         .aspectRatio(1)
         .backgroundColor('#FF5E5D')
         .onClick(() => {
-          // TODO：删除
+          //删除
+          this.deleteData(id)
         })
     }
     .height('100%')
@@ -38,7 +51,7 @@ struct NoteIndexPage {
         if (this.list.length) {
           Column() {
             List() {
-              ForEach(this.list, (item: NoteItem) => {
+              ForEach(this.list, (item: PrivacyNoteDBInfo) => {
                 ListItem() {
                   Row() {
                     Column() {
@@ -72,10 +85,14 @@ struct NoteIndexPage {
                 .transition({ type: TransitionType.Delete, opacity: 0 })
                 .swipeAction({
                   end: {
-                    builder: () => { this.swipeActionEnd(item.id) },
+                    builder: () => {
+                      this.swipeActionEnd(item.id)
+                    },
+                    // 侧滑到一定距离就触发此方法
                     onAction: () => {
                       animateTo({ duration: 1000 }, () => {
-                        // TODO：侧滑删除
+                        // 侧滑删除
+                        this.deleteData(item.id)
                       })
                     },
                     actionAreaDistance: 56,

@@ -1,4 +1,5 @@
-import { router } from '@kit.ArkUI'
+import { promptAction, router } from '@kit.ArkUI'
+import { it } from '@ohos/hypium'
 import { PRIVACY_SETTINGS, PrivacySettings } from '../../common/constants'
 import { showDevelopingTips } from '../../common/dev'
 
@@ -117,7 +118,9 @@ struct HomeEntry {
 @Component
 struct HomeShortcut {
   // 监听 AppStorage 的数据变化，注意 @Watch 的书写位置
-  @StorageLink(PRIVACY_SETTINGS) privacySettings: PrivacySettings = {}
+  @StorageLink(PRIVACY_SETTINGS) @Watch('onPrivacySettingsChange') privacySettings: PrivacySettings = {}
+  // PersistentStorage:持久化存储UI状态，将选定的 AppStorage 属性保留在设备磁盘上，不支持嵌套对象存储，持久化变量最好小于2KB的数据，写入磁盘数据是同步的
+  @StorageLink('isHidePrivacy') isHidePrivacy: boolean = false
   @State list: IconItem[] = [
     {
       title: '手机瘦身',
@@ -132,7 +135,12 @@ struct HomeShortcut {
     {
       title: '隐私空间',
       icon: $r('app.media.ic_home_shortcut_yskj'),
-      url: '/pages/Privacy/PrivacyIndexPage'
+      // 判断当前有没有设置隐私空间密码
+      // 如果没有，就打开设置密码页面
+      // 如果有，就打开验证密码页面
+      url: this.privacySettings.patternPassword ?
+        '/pages/Privacy/Auth/AuthPatternLockPage' :
+        '/pages/Privacy/Auth/AuthPatternLockSettingsPage'
     },
     {
       title: '通讯录备份',
@@ -160,6 +168,43 @@ struct HomeShortcut {
     }
   }
 
+  aboutToAppear(): void {
+    this.togglePrivacyEntry()
+  }
+
+  // 当值发生改变时，调用此方法
+  onPrivacySettingsChange() {
+    this.togglePrivacyEntry()
+  }
+
+  // 长按切换隐私空间入口
+  togglePrivacyEntry() {
+    // 隐私空间
+    const privacyItem: IconItem = {
+      title: '隐私空间',
+      icon: $r('app.media.ic_home_shortcut_yskj'),
+      // 判断当前有没有设置隐私空间密码
+      // 如果没有，就打开设置密码页面
+      // 如果有，就打开验证密码页面
+      url: this.privacySettings.patternPassword ?
+        '/pages/Privacy/Auth/AuthPatternLockPage' :
+        '/pages/Privacy/Auth/AuthPatternLockSettingsPage'
+    }
+
+    // 日历清理
+    const calendarItem: IconItem = {
+      title: '日历清理',
+      icon: $r('app.media.ic_home_shortcut_rlql'),
+      url: '/pages/Calendar/CalendarIndexPage'
+    }
+
+    if (this.isHidePrivacy === true) {
+      this.list[2] = calendarItem
+    } else {
+      this.list[2] = privacyItem
+    }
+  }
+
   build() {
     GridRow({ gutter: 10, columns: 3 }) {
       ForEach(this.list, (item: IconItem, index: number) => {
@@ -168,8 +213,7 @@ struct HomeShortcut {
             // 取消图片长按时间
             Image(item.icon)
               .width(44)
-              .aspectRatio(1)
-              //是否可拖拽功能
+              .aspectRatio(1)//是否可拖拽功能
               .draggable(false)
             Text(item.title)
               .fontSize(14)
@@ -189,6 +233,22 @@ struct HomeShortcut {
           .onClick(() => {
             this.openShortcutPage(item)
           })
+          // 添加手势
+          .gesture(
+            // 长按手势，可配置fingers:手指数、 duration:长按所需的最短时间、 repeat:是否连续触发事件回调
+            // LongPressGesture({ fingers: 1, duration: 500, repeat: true })
+            LongPressGesture()
+              .onAction(() => {
+                // promptAction.showToast({ message: "长按手势触发" })
+                if (index === 2) {
+                  this.isHidePrivacy = !this.isHidePrivacy
+                  this.togglePrivacyEntry()
+                }
+              })
+              .onActionEnd(() => { // 长按结束
+                // promptAction.showToast({ message: "长按结束" })
+              })
+          )
         }
       })
     }

@@ -1,4 +1,6 @@
 import { PRIVACY_SETTINGS, PrivacySettings } from '../../../common/constants'
+import { promptAction, router } from '@kit.ArkUI'
+import { encryptMD5 } from '../../../common/utils/encryptMD5'
 
 interface RouterParams {
   isForgetPassword?: boolean
@@ -24,10 +26,11 @@ struct AuthPatternLockSettingsPage {
 
   build() {
     Navigation() {
-      // Column() {
-      //   Text('inputPasswords：' + this.inputPassword)
-      //   Text('firstPasswords：' + this.firstPassword)
-      // }
+      Column() {
+        Text('当前输入的临时密码：' + this.inputPassword)
+        Text('第一次输入的密码：' + this.firstPassword)
+      }
+
       Column({ space: 20 }) {
         Column({ space: 10 }) {
           // 请输入密码
@@ -58,7 +61,34 @@ struct AuthPatternLockSettingsPage {
             clearTimeout(this.timeoutID)
           })
           .onPatternComplete((input: number[]) => {
-            // TODO：密码输入结束时触发该回调
+            this.inputPassword = input
+            // 密码输入结束时触发该回调
+            if (input.length < 4) {
+              this.errorMessage = '输入错误，最少连接4个点,请重新输入'
+              this.patternLockController.setChallengeResult(PatternLockChallengeResult.WRONG)
+            } else {
+              this.patternLockController.setChallengeResult(PatternLockChallengeResult.CORRECT)
+              this.errorMessage = ''
+              if (this.firstPassword.length > 0) {
+                // 对象对比是对比的内存地址
+                // 对比两次输入密码是否一致
+                if (this.firstPassword.toString() === input.toString()) {
+                  promptAction.showToast({ message: '密码设置成功' })
+                  this.privacySettings.patternPassword = encryptMD5(input.toString())
+                  router.pushUrl({url:'/pages/Privacy/PrivacyIndexPage'.slice(1)})
+                } else {
+                  this.errorMessage = '两次输入密码一致'
+                  this.patternLockController.setChallengeResult(PatternLockChallengeResult.WRONG)
+                }
+              } else {
+                // 保存首次输入的密码
+                this.firstPassword = input
+              }
+            }
+            setTimeout(() => {
+              this.timeoutID = this.patternLockController.reset()
+              this.inputPassword = []
+            }, 500)
           })
       }
       .padding({ top: 140 })

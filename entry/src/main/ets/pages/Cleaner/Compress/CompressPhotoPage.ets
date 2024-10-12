@@ -24,14 +24,25 @@ struct CompressPhotoIndexPage {
   }
 
   async getList() {
-    this.list = await cleanerManager.getLargeSizeList(2 * MEGA_BYTE)
+    this.list = await cleanerManager.getLargeSizeList(2 * KILO_BYTE)
   }
 
-  startCompress (){
-    this.selectedUris.forEach(item => {
-    cleanerManager.compressImage(item)
+  // 开始压缩图片
+  async startCompress (){
+    // this.selectedUris.forEach(item => {
+    // cleanerManager.compressImage(item)
+    // })
+    // ForEach没有返回值，现升级为map
+    const promiseList = this.selectedUris.map(async (item) => {
+      return await cleanerManager.compressImage(item)
     })
+    // 所有异步任务执行完后，才可执行下面的任务
+    await Promise.all(promiseList)
     promptAction.showToast({message:this.selectedUris.length + "张图片压缩成功！"})
+    // 删除原图
+    await cleanerManager.deletePhotos(this.selectedUris)
+    // 重新获取图片，注意修复ForEach第三个参数的问题
+    this.getList()
   }
 
   // TODO：立即瘦身（压缩照片）
@@ -87,7 +98,7 @@ struct CompressPhotoIndexPage {
                           .borderRadius(6)
                           .clip(true)
                         }
-                      })
+                      },(item:photoAccessHelper.PhotoAsset) => item.uri)
                     }
                   }
 
@@ -129,7 +140,6 @@ struct CompressPhotoIndexPage {
             .layoutWeight(1)
             .enabled(this.selectedUris.length > 0)
             .onClick(() => {
-              // TODO：立即瘦身（压缩照片）
               this.startCompress()
             })
         }

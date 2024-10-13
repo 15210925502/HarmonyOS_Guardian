@@ -13,8 +13,20 @@ struct FaultLoggerTestPage {
               throw new Error('我没被捕捉到。。。嘿嘿')
             })
           Button('获取上报错误日志信息')
+            //事件
+            // 点击事件:onClick(()=>{})
+            // 输入框变化内容事件:onChange((value是输入的内容)=>{})
+            // 键盘点击提交事件(回车):onSubmit(()=>{})
+            // 输入框聚焦onFocus、失焦onBlur
+            // 区域大小变化onAreaChange
             .onClick(async () => {
             const logger = await FaultLogger.query(FaultLogger.FaultType.JS_CRASH)
+              //提示方法3
+              //轻提示：土司  promptAction.showToast({})
+              //重提示：弹层  promptAction.showDialog({})
+              //重提示：弹层(无需引入包)  AlertDialog.show({})
+              // 弹层配置：
+              // title,message,buttons
               AlertDialog.show({ message: JSON.stringify(logger, null, 2) })
           })
         }.constraintSize({ minHeight: '100%' })

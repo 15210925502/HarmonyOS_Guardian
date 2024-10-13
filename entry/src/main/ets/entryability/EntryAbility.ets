@@ -1,5 +1,5 @@
 import { AbilityConstant, errorManager, UIAbility, Want } from '@kit.AbilityKit';
-import { promptAction, router, window } from '@kit.ArkUI';
+import { KeyboardAvoidMode, promptAction, router, window } from '@kit.ArkUI';
 import { FaultLogger, hilog } from '@kit.PerformanceAnalysisKit';
 import { LoginInfoResponse, LOGIN_INFO, PrivacySettings } from '../common/constants';
 import { PRIVACY_SETTINGS } from '../common/constants';
@@ -19,7 +19,7 @@ export default class EntryAbility extends UIAbility {
         const currentFaultLog = logger[0]
         console.log('errorMessage', JSON.stringify(currentFaultLog))
         // 数据上传到后台
-        await axios.post('https://xxxxxx',currentFaultLog)
+        await axios.post('https://xxxxxx', currentFaultLog)
         promptAction.showToast({
           message: '出现的未知错误，已自动上报到后台'
         })
@@ -30,7 +30,7 @@ export default class EntryAbility extends UIAbility {
   onDestroy(): void {
     hilog.info(0x0000, 'testTag', '%{public}s', 'Ability onDestroy');
     // 销毁错误管理器
-    errorManager.off('error',errorManagerID)
+    errorManager.off('error', errorManagerID)
   }
 
   onWindowStageCreate(windowStage: window.WindowStage): void {
@@ -48,7 +48,14 @@ export default class EntryAbility extends UIAbility {
       // 隐私空间持久化存储
       PersistentStorage.persistProp<PrivacySettings>(PRIVACY_SETTINGS, {})
       // 登录后的用户信息
-      PersistentStorage.persistProp<LoginInfoResponse>(LOGIN_INFO,{})
+      PersistentStorage.persistProp<LoginInfoResponse>(LOGIN_INFO, {})
+
+      // 键盘避让：当键盘展示的时候，让可调节的区域进行压缩，从而给键盘让出位置
+      try {
+        windowStage.getMainWindowSync().getUIContext().setKeyboardAvoidMode(KeyboardAvoidMode.RESIZE)
+      } catch (err) {
+        console.log('testData', JSON.stringify(err))
+      }
     });
   }
 

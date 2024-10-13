@@ -165,6 +165,12 @@ struct HomeShortcut {
       showDevelopingTips()
     } else {
       router.pushUrl({ url: item.url.slice(1) })
+
+      // router.pushUrl({
+      //   // /是当前模块查找，跨模块查找时通过包！
+      //   // @bundle:包名/模块名/路劲
+      //   url:"@bundle:heima.laopan.base05/SingSong/ets/pages/Index"
+      // })
     }
   }
 

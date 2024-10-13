@@ -2,6 +2,7 @@ import { themeManager } from '../manager';
 import { GuardTabsComp } from './Tabs/GuardTabsComp';
 import { HomeTabsComp } from './Tabs/HomeTabsComp';
 import { MyTabsComp } from './Tabs/MyTabsComp';
+import { window } from '@kit.ArkUI';
 
 @Entry
 @Component
@@ -10,6 +11,28 @@ struct Index {
   @Provide currentIndex: number = 0
   @Provide isShowPage: boolean = false
   @StorageLink('bottomHeight') bottomHeight: number = 0
+
+  aboutToAppear(): void {
+    // 全屏显示
+    // window.getLastWindow(getContext()).then(win => {
+    //   win.setWindowLayoutFullScreen(true)
+    // })
+
+    // // //   获取安全区域的高度大小：
+    // // // 上方区域
+    // // const top = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM).topRect.height
+    // // // top是一个px
+    // // this.systemTop = px2vp(top)
+    // // const bottom = win.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR).bottomRect.height
+    // // this.systemBottom = px2vp(bottom)
+    // // 设置当前窗口的背景色：
+    // win.setWindowBackgroundColor('#ffc0cb')
+    // // 设置状态栏颜色+文字
+    // win.setWindowSystemBarProperties( {
+    //   statusBarColor: '#ffc0cb',
+    //   statusBarContentColor: '#ffffff'
+    // })
+  }
 
   onPageShow() {
     themeManager.enableFullScreen()

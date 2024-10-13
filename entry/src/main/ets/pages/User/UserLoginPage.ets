@@ -43,6 +43,8 @@ struct UserLoginPage {
             .onSubmit(() => {
               // TODO:提交图形验证码
             })
+          // ⚠️⚠️⚠️⚠️图形验证码自动请求
+          // timestamp=${this.timestamp}   后面这个变量是什么都行，只要是它发生变化，这个请求就会触发
           Image(`${BASE_URL}/code/graphic?phone=${this.phoneNumber}&bizType=${1}&timestamp=${this.timestamp}`)
             .width(108)
             .height(42)

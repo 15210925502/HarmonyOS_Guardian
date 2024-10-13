@@ -10,7 +10,7 @@
     "dayjs": "^1.11.7",
     "@ohos/crypto-js": "^2.0.4",
     "@wolfx/lodash": "^4.17.21-rc.2",
-    "@ohos/axios": "^2.2.0",
+    "@ohos/axios": "^2.2.4",
     "@hview/dayjs": "^1.11.11"
   },
   "devDependencies": {

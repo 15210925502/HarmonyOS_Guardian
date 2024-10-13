@@ -1,18 +1,19 @@
 import { relationalStore } from '@kit.ArkData';
-import { PrivacyNoteDBInfo } from '../pages/Privacy/Note/PrivacyNoteDBInfo';
+import { PrivacyRecorderDBInfo } from '../pages/Privacy/Recorder/PrivacyRecorderDBInfo';
 
-// 隐私笔记数据库封装
-class PrivacyNoteDB {
+// 隐私录音数据库封装
+class PrivacyRecorderDB {
   // 操作数据库的实例
   private store: relationalStore.RdbStore | null = null
   // 数据库名称
-  private tableName = 'privacyNote'
+  private tableName = 'privacyRecorder'
   // 创建数据库语句
   private sqlCreate = `CREATE TABLE IF NOT EXISTS ${this.tableName} (
                         id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        filePath TEXT NOT NULL,
                         title TEXT NOT NULL,
-                        content TEXT NOT NULL,
-                        date_added INTEGER NOT NULL
+                        date_added INTEGER NOT NULL,
+                        duration INTEGER NOT NULL
                       )`
 
   // 类的构造器
@@ -26,13 +27,14 @@ class PrivacyNoteDB {
 
   // 获取数据库操作的实例
   async getStoreInstance() {
-    if (!this.store) {
-      // 打开或创建数据库文件
-      this.store = await relationalStore.getRdbStore(getContext(), {
-        name: 'guardian.db',
-        securityLevel: relationalStore.SecurityLevel.S1 //安全等级（夸设备共享等级）
-      })
+    if (this.store) {
+      return this.store
     }
+    // 打开或创建数据库文件
+    this.store = await relationalStore.getRdbStore(getContext(), {
+      name: 'guardian.db',
+      securityLevel: relationalStore.SecurityLevel.S1 //安全等级（夸设备共享等级）
+    })
     return this.store
   }
 
@@ -70,20 +72,10 @@ class PrivacyNoteDB {
     // 查询行数
     // 踩坑，有可能会返回-1
     // const rowCount = resultSet.rowCount < 0 ? 0 : resultSet.rowCount
-    const list: PrivacyNoteDBInfo[] = []
+    const list: PrivacyRecorderDBInfo[] = []
     while (resultSet.goToNextRow()) {
-      // 方法一
-      // 一个一个字段取值
-      // const item: PrivacyNoteDBInfo = {
-      //   id : resultSet.getLong(0),
-      //   title:resultSet.getString(1),
-      //   content:resultSet.getString(2),
-      //   date_added:resultSet.getLong(3)
-      // }
-
-      // 方法二
       // api11之后可以一次取一行数据
-      const item = resultSet.getRow() as PrivacyNoteDBInfo
+      const item = resultSet.getRow() as PrivacyRecorderDBInfo
 
       list.push(item)
     }
@@ -101,14 +93,14 @@ class PrivacyNoteDB {
     return resultSet.rowCount > 0 ? resultSet.rowCount : 0
   }
 
-  async insert(value: PrivacyNoteDBInfo) {
+  async insert(value: PrivacyRecorderDBInfo) {
     // 打开或创建数据库文件
     const store = await this.getStoreInstance()
     // 新增数据
     return store.insert(this.tableName, value)
   }
 
-  async update(value: PrivacyNoteDBInfo) {
+  async update(value: PrivacyRecorderDBInfo) {
     if (!value.id) {
       return Promise.reject()
     }
@@ -132,4 +124,4 @@ class PrivacyNoteDB {
   }
 }
 
-export const privacyNoteDB = new PrivacyNoteDB()
+export const privacyRecorderDB = new PrivacyRecorderDB()

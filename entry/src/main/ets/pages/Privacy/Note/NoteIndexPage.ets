@@ -2,7 +2,7 @@ import { router } from '@kit.ArkUI'
 import dayjs from 'dayjs'
 import { EmptyTipsComp } from '../../../common/components'
 import { privacyNoteDB } from '../../../dataBase/PrivacyNoteDB'
-import { PrivacyNoteDBInfo } from './PrivacyNoteItem'
+import { PrivacyNoteDBInfo } from './PrivacyNoteDBInfo'
 
 @Entry
 @Component

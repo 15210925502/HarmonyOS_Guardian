@@ -19,6 +19,11 @@ class ThemeManager {
     }
   }
 
+  // // 设备环境变量查询：查到结果并设置给AppStorage
+  // Environment.envProp('colorMode',ColorMode.LIGHT)
+  // // 从AppStorage取出来看看！！
+  // this.colorMode = AppStorage.get('colorMode') as ColorMode
+
   /** 初始化主题设置 */
   initThemeSetting() {
     const app = getContext()
@@ -73,6 +78,14 @@ class ThemeManager {
     this.getWindowStage()
       .then((windowStage: window.Window) => {
         windowStage.setWindowLayoutFullScreen(true)
+        //   全屏模式下，如何去获取安全区域的高度px单位
+        // 设置状态栏颜色，并不能扩展区域！
+        // windowStage.setWindowSystemBarProperties({
+        //   // 只能写16进制
+        //   statusBarColor:'#ff00ff0f',
+        //   // 未知问题：设置不了
+        //   navigationBarColor:'#ff00ff0f'
+        // })
         const topArea = windowStage.getWindowAvoidArea(window.AvoidAreaType.TYPE_SYSTEM)
         AppStorage.setOrCreate('topHeight', px2vp(topArea.topRect.height))
         const bottomArea = windowStage.getWindowAvoidArea(window.AvoidAreaType.TYPE_NAVIGATION_INDICATOR)
